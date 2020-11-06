@@ -1,16 +1,15 @@
+import 'package:age_calculator/duration_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'age_model.dart';
+
 class HomeScreen extends StatelessWidget {
   BuildContext context;
+  Age _userAge = Age();
+  Duration _nextBirthDay = Duration();
 
-  HomeScreen() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
-  }
-
-  final TextEditingController _dateOfBirthController =
+   final TextEditingController _dateOfBirthController =
       TextEditingController(text: "01-01-2000");
 
   final TextEditingController _todayDateController =
@@ -19,10 +18,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+
     Widget _dateOfBirthHeading = _buildHeading("Date of Birth");
     Widget _birthDateTextField = _buildBirthDateTextField();
     Widget _todayDateHeading = _buildHeading("Today Date");
     Widget _todayDateTextField = _buildTodayDateTextField();
+
     Widget _clearCalculateButtonsRow = _buildClearCalcButtonsRow();
     Widget _ageOutputHeading = _buildHeading("Age is");
     Widget _ageOutputRow = _buildAgeOutputRow();
@@ -32,22 +33,24 @@ class HomeScreen extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(20),
-      child: Column(
-        children: <Widget>[
-          _dateOfBirthHeading,
-          _birthDateTextField,
-          _emptyBox,
-          _todayDateHeading,
-          _todayDateTextField,
-          _emptyBox,
-          _clearCalculateButtonsRow,
-          _emptyBox,
-          _ageOutputHeading,
-          _ageOutputRow,
-          _emptyBox,
-          _nextBirthDayHeading,
-          _nextBirthOutputRow,
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            _dateOfBirthHeading,
+            _birthDateTextField,
+            _emptyBox,
+            _todayDateHeading,
+            _todayDateTextField,
+            _emptyBox,
+            _clearCalculateButtonsRow,
+            _emptyBox,
+            _ageOutputHeading,
+            _ageOutputRow,
+            _emptyBox,
+            _nextBirthDayHeading,
+            _nextBirthOutputRow,
+          ],
+        ),
       ),
     );
   }
@@ -120,7 +123,10 @@ class HomeScreen extends StatelessWidget {
                     initialDate: DateTime.now(),
                     firstDate: DateTime(1940),
                     lastDate: DateTime.now())
-                .then((date) {});
+                .then((date) {
+                  //code to handle date
+              print(date.toString());
+            });
           },
           controller: _dateOfBirthController,
           decoration: _getTextFieldWithCalendarIconDecoration(),
@@ -142,7 +148,9 @@ class HomeScreen extends StatelessWidget {
                     initialDate: DateTime.now(),
                     firstDate: DateTime(1940),
                     lastDate: DateTime.now())
-                .then((date) {});
+                .then((date) {
+                  print(date.toString());
+            });
           },
           controller: _todayDateController,
           decoration: _getTextFieldWithCalendarIconDecoration(),
@@ -190,9 +198,10 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildAgeOutputRow() {
-    Widget _ageYearsOutputField = _buildOutputField("Years", "-");
-    Widget _ageMonthsOutputField = _buildOutputField("Months", "-");
-    Widget _ageDaysOutputField = _buildOutputField("Days", "-");
+    Widget _ageYearsOutputField = _buildOutputField("Years", _userAge.years.toString());
+    Widget _ageMonthsOutputField = _buildOutputField("Months", _userAge.months.toString());
+    Widget _ageDaysOutputField = _buildOutputField("Days",_userAge.day
+        .toString());
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -205,9 +214,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildNextBirthDayOutputRow() {
-    Widget _nextBirthYearsOutputField   = _buildOutputField("Years", "-");
-    Widget _nextBirthMonthsOutputField  = _buildOutputField("Months", "-");
-    Widget _nextBirthDaysOutputField    = _buildOutputField("Days", "-");
+    Widget _nextBirthYearsOutputField = _buildOutputField("Years", "-");
+    Widget _nextBirthMonthsOutputField = _buildOutputField("Months", _nextBirthDay.months.toString());
+    Widget _nextBirthDaysOutputField = _buildOutputField("Days", _nextBirthDay.days.toString());
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
