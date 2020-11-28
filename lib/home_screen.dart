@@ -1,3 +1,4 @@
+import 'package:age_calculator/age_calculator.dart';
 import 'package:age_calculator/duration_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,12 +9,16 @@ class HomeScreen extends StatelessWidget {
   BuildContext context;
   Age _userAge = Age();
   Duration _nextBirthDay = Duration();
+  DateTime dateOfBirth;
+  DateTime futureDate;
 
    final TextEditingController _dateOfBirthController =
       TextEditingController(text: "01-01-2000");
 
   final TextEditingController _todayDateController =
       TextEditingController(text: "01-01-2020");
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +130,8 @@ class HomeScreen extends StatelessWidget {
                     lastDate: DateTime.now())
                 .then((date) {
                   //code to handle date
-              print(date.toString());
+              dateOfBirth = date;
+              print(date.runtimeType);
             });
           },
           controller: _dateOfBirthController,
@@ -149,7 +155,9 @@ class HomeScreen extends StatelessWidget {
                     firstDate: DateTime(1940),
                     lastDate: DateTime.now())
                 .then((date) {
-                  print(date.toString());
+              futureDate = date;
+
+              print(date.toString());
             });
           },
           controller: _todayDateController,
@@ -178,7 +186,10 @@ class HomeScreen extends StatelessWidget {
       height: 60,
       child: RaisedButton(
         color: Theme.of(context).primaryColor,
-        onPressed: () {},
+        onPressed: () {
+          Age _test = AgeCalculator().calculateAge(dateOfBirth, futureDate);
+          print(_test);
+        },
         child: Text('CALCULATE',
             style: TextStyle(fontSize: 20, color: Colors.white)),
       ),
@@ -200,7 +211,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildAgeOutputRow() {
     Widget _ageYearsOutputField = _buildOutputField("Years", _userAge.years.toString());
     Widget _ageMonthsOutputField = _buildOutputField("Months", _userAge.months.toString());
-    Widget _ageDaysOutputField = _buildOutputField("Days",_userAge.day
+    Widget _ageDaysOutputField = _buildOutputField("Days",_userAge.days
         .toString());
 
     return Row(
